@@ -1,6 +1,7 @@
 package com.example.androidstt.ui.order
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -95,6 +96,7 @@ class OrderFragment : BaseFragment() {
     // 주문 관련 음성 인식은 여기에서 다 처리합니다.
     override fun onRecognized(results: List<String>) {
         super.onRecognized(results)
+        Log.d("OrderFragment", results.joinToString())
 
         val message = results.firstOrNull { it.isNotBlank() } ?: return
         addMyMessage(message)

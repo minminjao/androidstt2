@@ -11,4 +11,11 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+
+
+
+    <string name="file_provider_name">com.example.androidstt.fileprovider</string>
+    <string name="base_directory_by_firebase_storage">gs://androidstt-7e6ed.appspot.com</string>
+
 </resources>

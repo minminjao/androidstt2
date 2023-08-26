@@ -59,7 +59,7 @@ class CountFragment : OrderChildrenBaseFragment() {
     }
 
     override fun onRecognized(message: String) {
-        super.onRecognized(message)
+//        super.onRecognized(message)
 
         val count = message.replace("[^0-9]", "").toIntOrNull()
         if (count != null) {

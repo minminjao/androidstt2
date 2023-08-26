@@ -100,7 +100,7 @@ class CategoryMenuFragment : OrderChildrenBaseFragment() {
     }
 
     override fun onRecognized(message: String) {
-        super.onRecognized(message)
+//        super.onRecognized(message)
 
         lifecycleScope.launch {
             val response = sendMessageToBot(message) ?: return@launch

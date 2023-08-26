@@ -1,6 +1,7 @@
 package com.example.androidstt.ui.order.children
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -270,13 +271,20 @@ open class OrderChildrenBaseFragment : Fragment(), FragmentResultListener {
     }
 
     protected open fun onRecognized(message: String) {
+        Log.d("OrderChildrenBaseFragment", message)
     }
 
     override fun onFragmentResult(requestKey: String, result: Bundle) {
-        val message = result.getString("message") ?: return
+        val message = result.getString("message")
+            // ?: return
 
-        if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-            onRecognized(message)
-        }
+        Log.d("Lifecycle", lifecycle.currentState.toString())
+        Log.d("Lifecycle", Lifecycle.State.RESUMED.toString())
+
+//        if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+            if (message != null) {
+                onRecognized(message)
+            }
+//        }
     }
 }

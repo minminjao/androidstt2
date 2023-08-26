@@ -1,6 +1,7 @@
 package com.example.androidstt.ui.order.children
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -122,7 +123,8 @@ class FullMenuFragment : OrderChildrenBaseFragment() {
     }
 
     override fun onRecognized(message: String) {
-        super.onRecognized(message)
+//        super.onRecognized(message)
+        Log.d("FullMenuFragment", message)
 
         lifecycleScope.launch {
             val response = sendMessageToBot(message) ?: return@launch

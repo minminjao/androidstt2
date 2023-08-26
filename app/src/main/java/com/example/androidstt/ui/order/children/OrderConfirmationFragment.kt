@@ -68,7 +68,7 @@ class OrderConfirmationFragment : OrderChildrenBaseFragment() {
     }
 
     override fun onRecognized(message: String) {
-        super.onRecognized(message)
+//        super.onRecognized(message)
 
         if (message.contains("맞아") ||
             message.contains("예")

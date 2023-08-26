@@ -50,7 +50,7 @@ class PaymentFragment : OrderChildrenBaseFragment() {
     }
 
     override fun onRecognized(message: String) {
-        super.onRecognized(message)
+//        super.onRecognized(message)
     }
 }
 //endregion

@@ -151,7 +151,7 @@ class OptionFragment : OrderChildrenBaseFragment() {
     }
 
     override fun onRecognized(message: String) {
-        super.onRecognized(message)
+//        super.onRecognized(message)
 
         val options = options.keys.firstOrNull { message.contains(it) } ?: run {
             speakOut("다시 말씀해 주세요.")
