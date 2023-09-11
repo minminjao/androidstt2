@@ -110,17 +110,17 @@ class MainActivity : AppCompatActivity(), RecognitionListener, TextToSpeech.OnIn
         speechRecognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, packageName)
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.KOREA)
-
+            // 구글 stt - audio/amr 로 저장시키기
 //            putExtra(RecognizerIntent.EXTRA_ORIGIN, true)
             putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/AMR");
             putExtra("android.speech.extra.GET_AUDIO", true);
 
         }
 
-        // start 2023.08.25. botbinoo
+        //
 //        speechRecognizer.startListening(speechRecognizerIntent)
         recognitionIntentForResult.launch(speechRecognizerIntent)
-        // end 2023.08.25. botbinoo
+        //
     }
 
     private fun stopSpeechRecognizer() {
@@ -182,8 +182,8 @@ class MainActivity : AppCompatActivity(), RecognitionListener, TextToSpeech.OnIn
     override fun onBufferReceived(buffer: ByteArray?) {
         Log.d("MainActivity", "onBufferReceived")
     }
-    // start 2023.08.25. botbinoo
-    // dev
+    // wav 파일 저장시키기
+
     private val recognitionIntentForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             result -> when(result.resultCode) {
                 RESULT_OK -> {
@@ -203,11 +203,11 @@ class MainActivity : AppCompatActivity(), RecognitionListener, TextToSpeech.OnIn
                     val exFilePath: File = File(baseExternalDirectory)
 
                     if(!wavFilePath.exists()) {
-                        // NOTICE: 음원 경로가 없을 경우는 거의 없지만...
+                        // NOTICE: 음원 경로가 없을 경우.(예외처리용)
                         wavFilePath.mkdirs()
                     }
                     if(!exFilePath.exists()) {
-                        // NOTICE: 음원 경로가 없을 경우는 거의 없지만...
+                        // NOTICE: 음원 경로가 없을 경우 (예외처리용)
                         exFilePath.mkdirs()
                     }
 
@@ -229,7 +229,7 @@ class MainActivity : AppCompatActivity(), RecognitionListener, TextToSpeech.OnIn
                     outputStream.close()
 
                     val session = FFmpegKit.execute("-y -i $amrFileName $wavFileName")
-
+                    // wav 파일로 변환하여 저장성공
                     if (ReturnCode.isSuccess(session.getReturnCode())) {
                         Log.d("저장 성공", wavFileName)
                         uploadStorage(File(wavFileName))
@@ -240,7 +240,7 @@ class MainActivity : AppCompatActivity(), RecognitionListener, TextToSpeech.OnIn
                         )
                     } else if (ReturnCode.isCancel(session.getReturnCode())) {
                     } else {
-                        // FAILURE
+                        // wav 파일로 저장실패
                         Log.d("FFmpeg", String.format("Command failed with state %s and rc %s.%s", session.getState(), session.getReturnCode(), session.getFailStackTrace()));
 
                     }
@@ -253,14 +253,14 @@ class MainActivity : AppCompatActivity(), RecognitionListener, TextToSpeech.OnIn
 
         var file = Uri.fromFile(wavFile)
         val riversRef = storageRef.child("wav/${file.lastPathSegment}")
-        val uploadTask = riversRef.putFile(file)
+        val uploadTask = riversRef.putFile(file) //file 사용
         uploadTask.addOnFailureListener {
             Log.e("uploadStorage err", it.message.toString())
         }.addOnSuccessListener { taskSnapshot ->
             Log.d("업로드 성공", taskSnapshot.uploadSessionUri.toString())
         }
     }
-    // end 2023.08.25. botbinoo
+    // 250- 252: wav파일로 저장된 것을 파이어베이스로 전송
 
     override fun onEndOfSpeech() {
         Log.d("MainActivity", "onEndOfSpeech")

@@ -93,7 +93,7 @@ class OrderFragment : BaseFragment() {
         binding.recyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 
-    // 주문 관련 음성 인식은 여기에서 다 처리합니다.
+    // 주문 관련 음성 인식은 여기에서 처리
     override fun onRecognized(results: List<String>) {
         super.onRecognized(results)
         Log.d("OrderFragment", results.joinToString())

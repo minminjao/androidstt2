@@ -116,7 +116,7 @@ open class OrderChildrenBaseFragment : Fragment(), FragmentResultListener {
             bundleOf("text" to text)
         )
     }
-
+    // 파이어베이스 function의 detectIntent 호출하는 코드
     protected suspend fun sendMessageToBot(text: String) = withContext(Dispatchers.IO) {
         val progressView = parentFragment?.view?.findViewById<View>(R.id.progress_view)
         if (progressView?.isVisible == true) return@withContext null
