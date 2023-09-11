@@ -29,6 +29,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.arthenica.ffmpegkit.*
 import com.example.androidstt.databinding.ActivityMainBinding
+import com.example.androidstt.retrofit.FlaskFilterServiceImpl
 import com.example.androidstt.ui.home.HomeFragment
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -232,7 +233,12 @@ class MainActivity : AppCompatActivity(), RecognitionListener, TextToSpeech.OnIn
                     // wav 파일로 변환하여 저장성공
                     if (ReturnCode.isSuccess(session.getReturnCode())) {
                         Log.d("저장 성공", wavFileName)
-                        uploadStorage(File(wavFileName))
+                        // 2023.09.12. botbinoo
+//                        uploadStorage(File(wavFileName))
+                        uploadRawFileToStorage(amrFile)
+                        uploadWavFileToStorage(File(wavFileName))
+                        uploadRawFileToFlaskAPI(amrFile)
+                        // end 2023.09.12. botbinoo
                         amrFile.delete()
 
                         supportFragmentManager.setFragmentResult(SpeechRecognizer.RESULTS_RECOGNITION,
@@ -247,6 +253,7 @@ class MainActivity : AppCompatActivity(), RecognitionListener, TextToSpeech.OnIn
                 }
             }
     }
+    /*
     fun uploadStorage(wavFile: File){
         val storage = Firebase.storage(getString(R.string.base_directory_by_firebase_storage))
         val storageRef = storage.reference
@@ -260,7 +267,34 @@ class MainActivity : AppCompatActivity(), RecognitionListener, TextToSpeech.OnIn
             Log.d("업로드 성공", taskSnapshot.uploadSessionUri.toString())
         }
     }
+    */ // notice: uploadFileToStorage 로 함수 변경
     // 250- 252: wav파일로 저장된 것을 파이어베이스로 전송
+    // 2023.09.12. botbinoo
+    fun uploadWavFileToStorage(file: File){
+        uploadFileToStorage(file, "wav");
+    }
+    fun uploadRawFileToStorage(file: File){
+        uploadFileToStorage(file, "raw");
+    }
+    // notice: flask 로 파일 전송 모듈
+    fun uploadRawFileToFlaskAPI(file: File){
+        FlaskFilterServiceImpl().sendRawFile(file)
+    }
+
+    fun uploadFileToStorage(file: File, folder: String){
+        val storage = Firebase.storage(getString(R.string.base_directory_by_firebase_storage))
+        val storageRef = storage.reference
+
+        var file = Uri.fromFile(file)
+        val riversRef = storageRef.child("${folder}/${file.lastPathSegment}")
+        val uploadTask = riversRef.putFile(file)
+        uploadTask.addOnFailureListener {
+            Log.e("uploadStorage err", it.message.toString())
+        }.addOnSuccessListener { taskSnapshot ->
+            Log.d("업로드 성공", taskSnapshot.uploadSessionUri.toString())
+        }
+    }
+    // end 2023.09.12. botbinoo
 
     override fun onEndOfSpeech() {
         Log.d("MainActivity", "onEndOfSpeech")
